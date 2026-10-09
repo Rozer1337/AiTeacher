@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AiTeacher</string>
+    <string name="books">Учебники</string>
+    <string name="add_pdf">Добавить PDF</string>
+    <string name="continue_">Продолжить</string>
+    <string name="new_book">Новый учебник</string>
+    <string name="prepare_book">Готовим учебник</string>
+</resources>
