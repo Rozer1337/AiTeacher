@@ -99,7 +99,8 @@ fun NewBookScreen() {
                 .padding(horizontal = 20.dp)
                 .fillMaxSize()
         ) {
-            PdfCard(onClick = {pdfPicker.launch(arrayOf("application/pdf"))})
+            //PdfCard(onClick = {pdfPicker.launch(arrayOf("application/pdf"))})
+            PdfCardEmpty(onClick = {pdfPicker.launch(arrayOf("application/pdf"))})
 
             Spacer(Modifier.height(20.dp))
 
@@ -220,6 +221,70 @@ private fun PdfCard(onClick : () -> Unit) {
 
 
 @Composable
+private fun PdfCardEmpty(
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(17.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFFFFDF8)
+        ),
+        onClick = onClick,
+        border = BorderStroke(
+            1.dp,
+            Color(0xFFE3DDD0)
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(width = 48.dp, height = 56.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFFF3E1DC)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "PDF",
+                    fontSize = 12.sp,
+                    fontWeight = W700,
+                    color = Color(0xFFB54838)
+                )
+            }
+
+            Spacer(Modifier.width(14.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = stringResource(R.string.upload_pdf),
+                    fontSize = 15.sp,
+                    fontWeight = W600,
+                    color = Color(0xFF1D1C1A),
+                    fontFamily = onsetFont
+                )
+
+                Spacer(Modifier.height(2.dp))
+
+                Text(
+                    text = stringResource(R.string.pick_file),
+                    fontSize = 13.sp,
+                    color = Color(0xFF5E5A52),
+                    fontFamily = onsetFont
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
 private fun EnterLabel(text: String) {
     Text(
         text = text,
@@ -294,5 +359,3 @@ private fun ProgressCard() {
 fun NewBookScreenPreview() {
     NewBookScreen()
 }
-
-//Доделать экран, кнопку продолжить в фоне не нужно
