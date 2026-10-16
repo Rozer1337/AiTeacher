@@ -5,4 +5,6 @@
     <string name="continue_">Продолжить</string>
     <string name="new_book">Новый учебник</string>
     <string name="prepare_book">Готовим учебник</string>
+    <string name="upload_pdf">Загрузить PDF</string>
+    <string name="pick_file">Выберите файл с устройства</string>
 </resources>
