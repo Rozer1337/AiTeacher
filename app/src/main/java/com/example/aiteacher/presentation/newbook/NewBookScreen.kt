@@ -1,8 +1,6 @@
 package com.example.aiteacher.presentation.newbook
 
-import android.widget.ImageButton
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -18,40 +16,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.font.FontWeight.Companion.W700
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aiteacher.R
-import com.example.aiteacher.model.Book
-import com.example.aiteacher.presentation.mainscreen.MainScreen
+import com.example.aiteacher.model.Utility.byteToMByte
 import com.example.aiteacher.ui.theme.literataFont
 import com.example.aiteacher.ui.theme.onsetFont
 import org.koin.compose.viewmodel.koinViewModel
@@ -60,12 +51,15 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun NewBookScreen() {
     val viewmodel = koinViewModel<NewBookViewmodel>()
+    val context = LocalContext.current
+
+    val state = viewmodel.bookMetadata.collectAsState()
 
     val pdfPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument()
     ) { uri ->
-        if (uri!=null) {
-            viewmodel.pdfUpload(uri)
+        if (uri != null) {
+            viewmodel.pdfUpload(uri, context)
         }
     }
     Scaffold(
@@ -99,8 +93,16 @@ fun NewBookScreen() {
                 .padding(horizontal = 20.dp)
                 .fillMaxSize()
         ) {
-            //PdfCard(onClick = {pdfPicker.launch(arrayOf("application/pdf"))})
-            PdfCardEmpty(onClick = {pdfPicker.launch(arrayOf("application/pdf"))})
+            if (state.value.name.isNotEmpty()) {
+                PdfCard(
+                    onClick = { pdfPicker.launch(arrayOf("application/pdf")) },
+                    name = state.value.name,
+                    pages = state.value.pages,
+                    size = state.value.size,
+                )
+            } else {
+                PdfCardEmpty(onClick = { pdfPicker.launch(arrayOf("application/pdf")) })
+            }
 
             Spacer(Modifier.height(20.dp))
 
@@ -153,7 +155,12 @@ fun NewBookScreen() {
 }
 
 @Composable
-private fun PdfCard(onClick : () -> Unit) {
+private fun PdfCard(
+    onClick: () -> Unit,
+    name: String,
+    pages: Int,
+    size: Long
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(17.dp),
@@ -190,7 +197,7 @@ private fun PdfCard(onClick : () -> Unit) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "biologiya-6-klass.pdf",
+                    text = name,
                     fontSize = 15.sp,
                     fontWeight = W600,
                     color = Color(0xFF1D1C1A),
@@ -201,7 +208,7 @@ private fun PdfCard(onClick : () -> Unit) {
                 Spacer(Modifier.height(2.dp))
 
                 Text(
-                    text = "18,4 МБ · 148 страниц",
+                    text = "${byteToMByte(size)} МБ · $pages страниц",
                     fontSize = 13.sp,
                     color = Color(0xFF5E5A52),
                     fontFamily = onsetFont
