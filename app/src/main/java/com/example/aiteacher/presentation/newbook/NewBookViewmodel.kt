@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 
 class NewBookViewmodel(val interactor: NewBookInteractor) : ViewModel() {
 
-    private val _bookMetadata = MutableStateFlow<NewBookScreenState>(NewBookScreenState())
+    private val _bookMetadata = MutableStateFlow(NewBookScreenState())
     val bookMetadata = _bookMetadata.asStateFlow()
 
     fun pdfUpload(uri: Uri, context: Context) {
@@ -28,6 +28,13 @@ class NewBookViewmodel(val interactor: NewBookInteractor) : ViewModel() {
                         size = state.size,
                         pages = state.pages
                     )
+                }
+                interactor.savePdf(uri, context, bookMetadata.value.size){ progress ->
+                    _bookMetadata.update {
+                        it.copy(
+                            progress = progress
+                        )
+                    }
                 }
             }
         }

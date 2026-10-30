@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id ("org.jetbrains.kotlin.plugin.serialization") version "2.4.20"
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -61,4 +62,6 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
+    implementation("androidx.room3:room3-runtime:3.0.3")
+    ksp("androidx.room3:room3-compiler:3.0.3")
 }

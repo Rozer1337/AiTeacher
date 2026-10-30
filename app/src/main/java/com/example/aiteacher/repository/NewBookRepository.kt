@@ -5,11 +5,13 @@ import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.provider.OpenableColumns
 import com.example.aiteacher.presentation.newbook.model.BookMetadata
+import java.io.File
+import java.util.UUID
 
 class NewBookRepository {
-    fun readPdf(uri: Uri, context: Context) : BookMetadata {
+    fun readPdf(uri: Uri, context: Context): BookMetadata {
         var name = ""
-        var size : Long = 0
+        var size: Long = 0
         context.contentResolver.query(
             uri,
             arrayOf(OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE),
@@ -32,7 +34,21 @@ class NewBookRepository {
         return BookMetadata(name, size, pages)
     }
 
-    fun savePdf(uri: Uri) {
-
+    fun savePdf(uri: Uri, context : Context, size : Long, onProgress : (Float) -> Unit) {
+        val dir = File(context.filesDir, "books").apply { mkdirs() }
+        val target = File(dir, "${UUID.randomUUID()}.pdf")
+        context.contentResolver.openInputStream(uri)!!.use { input ->
+            target.outputStream().use { output ->
+                val buffer = ByteArray(64 * 1024)
+                var copied = 0L
+                while (true) {
+                    val read = input.read(buffer)
+                    if (read == -1) break
+                    output . write (buffer, 0, read)
+                    copied += read
+                    if (size > 0) onProgress(copied.toFloat() / size)
+                }
+            }
+        }
     }
 }
