@@ -16,10 +16,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -147,7 +151,7 @@ fun NewBookScreen() {
 
             Spacer(Modifier.height(20.dp))
 
-            ProgressCard()
+            if (state.value.name.isNotEmpty()) ProgressCard(state.value.progress, 0.1F ,1F)
 
             Spacer(Modifier.height(24.dp))
         }
@@ -331,7 +335,7 @@ private fun TextEnter(
 }
 
 @Composable
-private fun ProgressCard() {
+private fun ProgressCard(file_upload_progress : Float, text_recognition_progress : Float, paragraphs_recognition_progress : Float) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(17.dp),
@@ -357,6 +361,92 @@ private fun ProgressCard() {
 
             Spacer(Modifier.height(16.dp))
 
+            ProgressStep(
+                title = "Файл загружен",
+                progress = file_upload_progress,
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            ProgressStep(
+                title = "Текст распознан",
+                progress = text_recognition_progress,
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
+            ProgressStep(
+                title = "Ищем параграфы",
+                progress = paragraphs_recognition_progress,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ProgressStep(
+    title: String,
+    progress: Float,
+) {
+   if (progress == 1F) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painterResource(R.drawable.ic_circle_check),
+                contentDescription = "Завершено",
+                tint = Color(0xFF2f5d50),
+                modifier = Modifier.size(28.dp)
+            )
+
+            Text(
+                text = title,
+                fontSize = 15.sp,
+                fontFamily = onsetFont,
+                color = Color(0xFF211B17),
+                modifier = Modifier.padding(start = 12.dp)
+            )
+        }
+    } else {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top
+        ) {
+            CircularProgressIndicator(
+                progress = { progress },
+                modifier = Modifier
+                    .padding(top = 1.dp)
+                    .size(24.dp),
+                color = Color(0xFF354BCE),
+                trackColor = Color(0xFFE8E8F3),
+                strokeWidth = 2.5.dp
+            )
+
+            Column(
+                modifier = Modifier
+                    .padding(start = 14.dp)
+                    .weight(1f)
+            ) {
+                Text(
+                    text = title,
+                    fontSize = 15.sp,
+                    fontFamily = onsetFont,
+                    fontWeight = W600,
+                    color = Color(0xFF211B17),
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                LinearProgressIndicator(
+                    progress = { progress },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(5.dp)
+                        .clip(CircleShape),
+                    color = Color(0xFF354BCE),
+                    trackColor = Color(0xFFE8E8F3)
+                )
+            }
         }
     }
 }

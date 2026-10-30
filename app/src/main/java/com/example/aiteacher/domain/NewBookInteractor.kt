@@ -9,4 +9,8 @@ class NewBookInteractor(val repository: NewBookRepository) {
     fun readPdf(uri: Uri, context: Context) : BookMetadata {
         return repository.readPdf(uri, context)
     }
+
+    fun savePdf(uri: Uri, context : Context, size : Long, onProgress : (Float) -> Unit){
+        return repository.savePdf(uri, context, size, onProgress)
+    }
 }
