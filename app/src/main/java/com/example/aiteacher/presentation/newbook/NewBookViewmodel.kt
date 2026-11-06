@@ -36,6 +36,7 @@ class NewBookViewmodel(val interactor: NewBookInteractor) : ViewModel() {
                         )
                     }
                 }
+                interactor.askLlm("Сколько страниц", uri, context.contentResolver)
             }
         }
     }

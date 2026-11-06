@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:name=".app.Application"
         android:allowBackup="true"

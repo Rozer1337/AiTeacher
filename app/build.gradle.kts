@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
-    implementation("androidx.room3:room3-runtime:3.0.3")
-    ksp("androidx.room3:room3-compiler:3.0.3")
+    implementation(libs.androidx.room3.runtime)
+    ksp(libs.androidx.room3.compiler)
+    implementation(libs.okhttp)
 }
