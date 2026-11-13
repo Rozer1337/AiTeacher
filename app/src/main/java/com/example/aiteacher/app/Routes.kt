@@ -7,3 +7,5 @@ object MainScreenRoute
 
 @Serializable
 object NewBookScreenRoute
+@Serializable
+object BookScreenRoute

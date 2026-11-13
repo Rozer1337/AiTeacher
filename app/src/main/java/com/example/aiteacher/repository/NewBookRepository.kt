@@ -4,11 +4,13 @@ import android.content.Context
 import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.provider.OpenableColumns
+import com.example.aiteacher.database.BookDao
+import com.example.aiteacher.database.BookEntity
 import com.example.aiteacher.presentation.newbook.model.BookMetadata
 import java.io.File
 import java.util.UUID
 
-class NewBookRepository {
+class NewBookRepository(private val dao: BookDao) {
     fun readPdf(uri: Uri, context: Context): BookMetadata {
         var name = ""
         var size: Long = 0
@@ -50,5 +52,9 @@ class NewBookRepository {
                 }
             }
         }
+    }
+
+    suspend fun saveBook(bookEntity: BookEntity) {
+        dao.insert(bookEntity)
     }
 }
