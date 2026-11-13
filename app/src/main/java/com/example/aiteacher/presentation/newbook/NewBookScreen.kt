@@ -97,10 +97,10 @@ fun NewBookScreen() {
                 .padding(horizontal = 20.dp)
                 .fillMaxSize()
         ) {
-            if (state.value.name.isNotEmpty()) {
+            if (state.value.fileName.isNotEmpty()) {
                 PdfCard(
                     onClick = { pdfPicker.launch(arrayOf("application/pdf")) },
-                    name = state.value.name,
+                    name = state.value.fileName,
                     pages = state.value.pages,
                     size = state.value.size,
                 )
@@ -115,7 +115,9 @@ fun NewBookScreen() {
             Spacer(Modifier.height(8.dp))
 
             TextEnter(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onValueChange = viewmodel::onNameTextFieldUpdated,
+                value = state.value.name
             )
 
             Spacer(Modifier.height(20.dp))
@@ -132,7 +134,9 @@ fun NewBookScreen() {
                     Spacer(Modifier.height(8.dp))
 
                     TextEnter(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        onValueChange = viewmodel::onSubjectTextFieldUpdated,
+                        value = state.value.subject
                     )
                 }
 
@@ -144,14 +148,16 @@ fun NewBookScreen() {
                     Spacer(Modifier.height(8.dp))
 
                     TextEnter(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        onValueChange = viewmodel::onGradeTextFieldUpdated,
+                        value = state.value.grade
                     )
                 }
             }
 
             Spacer(Modifier.height(20.dp))
 
-            if (state.value.name.isNotEmpty()) ProgressCard(state.value.progress, 0.1F ,1F)
+            if (state.value.fileName.isNotEmpty()) ProgressCard(state.value.progress, 0.1F ,1F)
 
             Spacer(Modifier.height(24.dp))
         }
@@ -308,11 +314,13 @@ private fun EnterLabel(text: String) {
 
 @Composable
 private fun TextEnter(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onValueChange : (String) -> Unit,
+    value : String
 ) {
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
+        value = value,
+        onValueChange = onValueChange,
         modifier = modifier
             .fillMaxWidth()
             .height(52.dp),

@@ -5,17 +5,12 @@ import android.net.Uri
 import com.example.aiteacher.model.Utility.uriToBase64
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonObject
-import okhttp3.Dns
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.UUID
 
 class RequestRepository() {
     private val client = OkHttpClient.Builder().build()
@@ -25,7 +20,7 @@ class RequestRepository() {
         withContext(Dispatchers.IO) {
             val base64 = uriToBase64(uri, contentResolver)
 
-            val model = "anthropic/claude-haiku-5.5"
+            val model = "z-ai/glm-5.3-flash"
             val engine = "cloudflare-ai"
 
             val content = JSONArray()
