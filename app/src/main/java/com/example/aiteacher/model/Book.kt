@@ -4,5 +4,6 @@ data class Book(
     val grade : String,
     val name : String,
     val paragraphs : Int,
-    val chatsCount : Int
+    val chatsCount : Int,
+    val subject : String
 )

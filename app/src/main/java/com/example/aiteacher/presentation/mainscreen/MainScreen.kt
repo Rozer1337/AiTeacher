@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -45,15 +46,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aiteacher.R
-import com.example.aiteacher.model.Book
 import com.example.aiteacher.ui.theme.literataFont
 import com.example.aiteacher.ui.theme.onsetFont
-import java.util.Locale.getDefault
+import org.koin.compose.viewmodel.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(listOfBooks : List<Book>, onAddBookClick : () -> Unit) {
+fun MainScreen(
+    onAddBookClick : () -> Unit,
+    onBookClick : () -> Unit) {
+    val viewmodel = koinViewModel<MainViewmodel>()
+
+    val state = viewmodel.state.collectAsState()
     Scaffold(
         containerColor = Color(0xFFF5F2EA),
         topBar = {
@@ -131,13 +136,14 @@ fun MainScreen(listOfBooks : List<Book>, onAddBookClick : () -> Unit) {
                 }
 
                 items(
-                    items = listOfBooks,
+                    items = state.value.books,
                 ) {
                     BookCard(
                         grade = it.grade,
                         name = it.name,
                         paragraphs = it.paragraphs,
-                        chatsCount = it.chatsCount
+                        chatsCount = it.chatsCount,
+                        onBookClick = onBookClick
                     )
                 }
             }
@@ -150,11 +156,8 @@ fun MainScreen(listOfBooks : List<Book>, onAddBookClick : () -> Unit) {
 @Preview()
 fun MainScreenPreview() {
     MainScreen(
-        listOf(
-            Book("6 класс", "Биология", 32, 3),
-            Book("6 класс", "История России", 24, 1),
-            Book("6 класс", "Биология", 32, 3)),
-        onAddBookClick = {}
+        onAddBookClick = {},
+        onBookClick = {}
     )
 }
 
@@ -163,7 +166,8 @@ private fun BookCard(
     grade : String,
     name : String,
     paragraphs : Int,
-    chatsCount : Int
+    chatsCount : Int,
+    onBookClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.width(168.dp)
@@ -174,7 +178,8 @@ private fun BookCard(
             colors = CardDefaults.cardColors(
                 containerColor = Color.Transparent
             ),
-            modifier = Modifier.width(168.dp)
+            modifier = Modifier.width(168.dp),
+            onClick = onBookClick
         ) {
             Box(modifier = Modifier.fillMaxWidth()
                 .height(154.dp)
@@ -286,7 +291,7 @@ private fun Continue() {
                 ) {
                     Text(
                         text = stringResource(R.string.continue_)
-                            .uppercase(getDefault()),
+                            .uppercase(),
                         color = Color(0xFFCFC8B8),
                         fontSize = 12.sp,
                         letterSpacing = 0.6.sp,
