@@ -20,21 +20,25 @@ object Utility {
 
     fun mapBookToBookEntity(book: Book) : BookEntity {
         return BookEntity(
+            id = book.id,
             grade = book.grade,
             name = book.name,
-            paragraphs = book.paragraphs,
-            chatsCount = book.chatsCount,
-            subject = book.subject
+            paragraphCount = book.paragraphCount,
+            subject = book.subject,
+            chatCount = book.chatCount,
+            pageCount = book.pageCount
         )
     }
 
     fun mapEntityBookToBook(bookEntity: BookEntity) : Book {
         return Book(
+            id = bookEntity.id,
             grade = bookEntity.grade,
             name = bookEntity.name,
-            paragraphs = bookEntity.paragraphs,
-            chatsCount = bookEntity.chatsCount,
-            subject = bookEntity.subject
+            paragraphCount = bookEntity.paragraphCount,
+            chatCount = bookEntity.chatCount,
+            pageCount = bookEntity.pageCount,
+            subject = bookEntity.subject,
         )
     }
 }

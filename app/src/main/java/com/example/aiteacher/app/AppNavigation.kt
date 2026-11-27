@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.example.aiteacher.presentation.bookscreen.BookScreen
 import com.example.aiteacher.presentation.mainscreen.MainScreen
 import com.example.aiteacher.presentation.newbook.NewBookScreen
@@ -19,8 +20,8 @@ fun AppNavigation(navHostController: NavHostController) {
                 onAddBookClick = {
                     navHostController.navigate(NewBookScreenRoute)
                 } ,
-                onBookClick = {
-                    navHostController.navigate(BookScreenRoute)
+                onBookClick = { bookId ->
+                    navHostController.navigate(BookScreenRoute(bookId))
                 }
             )
         }
@@ -30,7 +31,8 @@ fun AppNavigation(navHostController: NavHostController) {
         }
 
         composable<BookScreenRoute> {
-            BookScreen()
+            val route = it.toRoute<BookScreenRoute>()
+            BookScreen(route.bookId)
         }
     }
 }

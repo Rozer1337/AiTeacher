@@ -17,53 +17,59 @@ class RequestRepository() {
     private val apiKey = ""
 
     suspend fun apiRequest(userRequest : String, uri: Uri, contentResolver: ContentResolver) {
-        withContext(Dispatchers.IO) {
-            val base64 = uriToBase64(uri, contentResolver)
+        runCatching {
+            withContext(Dispatchers.IO) {
+                val base64 = uriToBase64(uri, contentResolver)
 
-            val model = "z-ai/glm-5.3-flash"
-            val engine = "cloudflare-ai"
+                val model = "openai/gpt-6-luna"
+                val engine = "cloudflare-ai"
 
-            val content = JSONArray()
-                .put(
-                JSONObject()
-                    .put("type", "text")
-                    .put("text", userRequest)
-                )
-                .put(
-                    JSONObject()
-                        .put("type", "file")
-                        .put("file", JSONObject()
-                            .put("filename", "document.pdf")
-                            .put("file_data", "data:application/pdf;base64,$base64"))
-                )
-            val message = JSONObject()
-                .put("role", "user")
-                .put("content", content)
+                val content = JSONArray()
+                    .put(
+                        JSONObject()
+                            .put("type", "text")
+                            .put("text", userRequest)
+                    )
+                    .put(
+                        JSONObject()
+                            .put("type", "file")
+                            .put("file", JSONObject()
+                                .put("filename", "document.pdf")
+                                .put("file_data", "data:application/pdf;base64,$base64"))
+                    )
+                val message = JSONObject()
+                    .put("role", "user")
+                    .put("content", content)
 
-            val plugins = JSONArray()
-                .put(
-                    JSONObject()
-                        .put("id", "file-parser")
-                        .put("pdf", JSONObject()
-                            .put("engine", engine)
-                        )
-                )
+                val plugins = JSONArray()
+                    .put(
+                        JSONObject()
+                            .put("id", "file-parser")
+                            .put("pdf", JSONObject()
+                                .put("engine", engine)
+                            )
+                    )
 
-            val json = JSONObject()
-                .put("model", model)
-                .put("messages", JSONArray().put(message))
-                .put("plugins", plugins)
+                val json = JSONObject()
+                    .put("model", model)
+                    .put("messages", JSONArray().put(message))
+                    .put("plugins", plugins)
 
-            val request = Request.Builder()
-                .url("https://openrouter.ai/api/v1/chat/completions")
-                .header("Authorization", "Bearer $apiKey")
-                .post(json.toString().toRequestBody("application/json".toMediaType()))
-                .build()
+                val request = Request.Builder()
+                    .url("https://openrouter.ai/api/v1/chat/completions")
+                    .header("Authorization", "Bearer $apiKey")
+                    .post(json.toString().toRequestBody("application/json".toMediaType()))
+                    .build()
 
-            client.newCall(request).execute().use{ response ->
-                println(response)
-                println(response.body.string())
+                client.newCall(request).execute().use{ response ->
+                    println(response)
+                    println(response.body.string())
+                }
             }
+        }.onFailure {
+            println(it.message)
+        }.onSuccess {
+
         }
     }
 }

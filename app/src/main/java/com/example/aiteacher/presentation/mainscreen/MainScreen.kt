@@ -55,7 +55,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MainScreen(
     onAddBookClick : () -> Unit,
-    onBookClick : () -> Unit) {
+    onBookClick : (Int) -> Unit) {
     val viewmodel = koinViewModel<MainViewmodel>()
 
     val state = viewmodel.state.collectAsState()
@@ -141,9 +141,9 @@ fun MainScreen(
                     BookCard(
                         grade = it.grade,
                         name = it.name,
-                        paragraphs = it.paragraphs,
-                        chatsCount = it.chatsCount,
-                        onBookClick = onBookClick
+                        paragraphs = it.paragraphCount,
+                        chatsCount = it.chatCount,
+                        onBookClick = { onBookClick(it.id) }
                     )
                 }
             }

@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -41,10 +42,16 @@ import androidx.compose.ui.unit.sp
 import com.example.aiteacher.R
 import com.example.aiteacher.ui.theme.literataFont
 import com.example.aiteacher.ui.theme.onsetFont
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookScreen() {
+fun BookScreen(
+    bookId : Int
+) {
+    val viewmodel = koinViewModel<BookViewmodel>()
+    val state = viewmodel.state.collectAsState()
+
     Scaffold(
         containerColor = Color(0xFFF5F2EA),
         topBar = {
@@ -108,7 +115,7 @@ fun BookScreen() {
                 )
 
                 Text(
-                    text = "Биология",
+                    text = state.value.subject,
                     modifier = Modifier
                         .align(Alignment.BottomStart)
                         .padding(start = 10.dp, bottom = 9.dp),
@@ -125,7 +132,7 @@ fun BookScreen() {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Биология, 6 класс",
+                    text = state.value.name,
                     fontFamily = literataFont,
                     fontWeight = W600,
                     fontSize = 23.sp,
@@ -134,7 +141,7 @@ fun BookScreen() {
                 )
 
                 Text(
-                    text = "148 страниц · 32 параграфа",
+                    text = "${state.value.pageCount} страниц · ${state.value.paragraphCount} параграфа",
                     fontFamily = onsetFont,
                     fontSize = 13.sp,
                     color = Color(0xFF5E5A52)
@@ -191,7 +198,7 @@ fun BookScreen() {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Чаты · 3",
+                    text = "Чаты · ${state.value.chatCount}",
                     fontFamily = onsetFont,
                     fontSize = 14.sp,
                     fontWeight = W600,
@@ -361,5 +368,8 @@ private fun ChatRow(
 @Composable
 @Preview()
 fun BookScreenPreview() {
-    BookScreen()
+    BookScreen(1)
 }
+
+//доделать подставление полей
+//показ страниц
