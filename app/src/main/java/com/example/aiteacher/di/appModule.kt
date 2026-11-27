@@ -3,10 +3,13 @@ package com.example.aiteacher.di
 import androidx.room3.Room
 import com.example.aiteacher.database.BookDao
 import com.example.aiteacher.database.BookDatabase
+import com.example.aiteacher.domain.BookInteractor
 import com.example.aiteacher.domain.MainInteractor
 import com.example.aiteacher.domain.NewBookInteractor
+import com.example.aiteacher.presentation.bookscreen.BookViewmodel
 import com.example.aiteacher.presentation.mainscreen.MainViewmodel
 import com.example.aiteacher.presentation.newbook.NewBookViewmodel
+import com.example.aiteacher.repository.BookRepository
 import com.example.aiteacher.repository.MainRepository
 import com.example.aiteacher.repository.NewBookRepository
 import com.example.aiteacher.repository.RequestRepository
@@ -31,4 +34,10 @@ val appModule = module {
     single <MainInteractor> { MainInteractor(get()) }
 
     viewModel <MainViewmodel> { MainViewmodel(get()) }
+
+    viewModel <BookViewmodel> { BookViewmodel(get(), get()) }
+
+    single <BookRepository> { BookRepository(get()) }
+
+    single <BookInteractor> { BookInteractor(get()) }
 }

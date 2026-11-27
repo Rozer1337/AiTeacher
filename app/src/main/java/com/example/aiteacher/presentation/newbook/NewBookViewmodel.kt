@@ -41,9 +41,10 @@ class NewBookViewmodel(val interactor: NewBookInteractor) : ViewModel() {
                 val book = Book(
                     grade = bookMetadata.value.grade,
                     name = bookMetadata.value.name,
-                    paragraphs = 1,
-                    chatsCount = 1,
-                    subject = bookMetadata.value.subject
+                    paragraphCount = 1,
+                    chatCount = 0,
+                    subject = bookMetadata.value.subject,
+                    pageCount = bookMetadata.value.pages
                 )
                 interactor.saveBook(book)
             }

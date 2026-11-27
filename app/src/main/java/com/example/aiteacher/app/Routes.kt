@@ -8,4 +8,6 @@ object MainScreenRoute
 @Serializable
 object NewBookScreenRoute
 @Serializable
-object BookScreenRoute
+data class BookScreenRoute(
+    val bookId : Int
+)
